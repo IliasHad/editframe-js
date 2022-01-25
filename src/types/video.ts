@@ -58,6 +58,9 @@ export type LayerText = {
 
 export type AudioLayer = BaseLayer 
 export type ImageLayer = BaseLayer & LayerShape
+export type SubtitlesLayer = BaseLayer & LayerShape & {
+  source: string
+}
 export type TextLayer = BaseLayer & LayerAlignment & LayerShape & LayerText
 export type VideoLayer = BaseLayer & LayerShape
 

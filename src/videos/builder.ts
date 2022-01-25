@@ -1,7 +1,7 @@
 import Api from 'api/api'
 import FetchError from 'api/Error'
 import { sizeForAspectRatio, uuid } from '../shared/utils'
-import { AudioLayer, ComposableLayer, ImageLayer, TextLayer, VideoLayer, WaveformLayer, Layer, VideoOptions } from '../types/video'
+import { AudioLayer, ComposableLayer, ImageLayer, SubtitlesLayer, TextLayer, VideoLayer, WaveformLayer, Layer, VideoOptions } from '../types/video'
 const FormData = require('form-data')
 
 type EncodeConfig = VideoOptions & {
@@ -97,6 +97,47 @@ class VideoBuilder {
    */
   addImage (file: Blob | string, options: ImageLayer) : VideoBuilder {
     const layer = this.addLayer({ type: 'image', ...options })
+    if(typeof(file) == 'string'){
+      this._form.append(`url${layer.id}`, file)
+    } else {
+      this._form.append(`file${layer.id}`, file)
+    } 
+    return this
+  }
+
+  /**
+   * Add subtitles from a .srt file to your video composition
+   *
+   * @example
+   * 
+   * ```
+   * const newVideo = await videos.build({ aspectRatio: '1:1', backgroundColor: 'black', duration: 10, hd: false })
+   * newVideo.addAudio(fs.createReadStream('./files/audio.mp3'))
+   * newVideo.addSubtitles([...newVideo.layers].pop() { color: '#02a4d3', fontSize: 42  })
+   * ```
+   */
+   addSubtitles (source: Layer, options: SubtitlesLayer) : VideoBuilder {
+    let _options = Object.assign({}, options)
+    _options.source = `${source.id}`
+    this.addLayer({ type: 'subtitles', ..._options })
+    return this
+  }
+
+  /**
+   * Add subtitles from a .srt file to your video composition
+   *
+   * @example
+   * 
+   * ```
+   * const newVideo = await videos.build({ aspectRatio: '1:1', backgroundColor: 'black', duration: 10, hd: false })
+   * newVideo.addAudio(fs.createReadStream('./files/audio.mp3'))
+   * newVideo.addSubtitlesFromFile(fs.createReadStream('./files/subs.srt'), [...newVideo.layers].pop() { color: '#02a4d3', fontSize: 42  })
+   * ```
+   */
+   addSubtitlesFromFile (file: Blob | string, source: Layer, options: SubtitlesLayer) : VideoBuilder {
+    let _options = Object.assign({}, options)
+    _options.source = `${source.id}`
+    const layer = this.addLayer({ type: 'subtitles', ..._options })
     if(typeof(file) == 'string'){
       this._form.append(`url${layer.id}`, file)
     } else {
