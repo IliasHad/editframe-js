@@ -106,14 +106,14 @@ class VideoBuilder {
   }
 
   /**
-   * Add subtitles from a .srt file to your video composition
+   * Add auto-transcribed subtitles to your video composition
    *
    * @example
    * 
    * ```
    * const newVideo = await videos.build({ aspectRatio: '1:1', backgroundColor: 'black', duration: 10, hd: false })
    * newVideo.addAudio(fs.createReadStream('./files/audio.mp3'))
-   * newVideo.addSubtitles([...newVideo.layers].pop() { color: '#02a4d3', fontSize: 42  })
+   * newVideo.addSubtitles([...newVideo.layers].pop(), { color: '#02a4d3' })
    * ```
    */
    addSubtitles (source: Layer, options: SubtitlesLayer) : VideoBuilder {
@@ -131,7 +131,7 @@ class VideoBuilder {
    * ```
    * const newVideo = await videos.build({ aspectRatio: '1:1', backgroundColor: 'black', duration: 10, hd: false })
    * newVideo.addAudio(fs.createReadStream('./files/audio.mp3'))
-   * newVideo.addSubtitlesFromFile(fs.createReadStream('./files/subs.srt'), [...newVideo.layers].pop() { color: '#02a4d3', fontSize: 42  })
+   * newVideo.addSubtitlesFromFile(fs.createReadStream('./files/subs.srt'), [...newVideo.layers].pop(), { color: '#02a4d3' })
    * ```
    */
    addSubtitlesFromFile (file: Blob | string, source: Layer, options: SubtitlesLayer) : VideoBuilder {
