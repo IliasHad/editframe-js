@@ -1,5 +1,5 @@
 import { Resolution } from "./common"
-import { VideoLayer } from "./video"
+import { SubtitlesLayer, VideoLayer } from "./video"
 
 /* eslint-disable camelcase */
 export type ClipRequestOptions = {
@@ -11,5 +11,9 @@ export type ClipRequestOptions = {
 export type ClipEncodeConfig = ClipRequestOptions & {
   clip: { id: any, resolution?: Resolution, volume?: Number }
   layers: Array<VideoLayer>
+}
+
+export type ComposableClipLayer = SubtitlesLayer & {
+  type: string
 }
 /* eslint-enable camelcase */

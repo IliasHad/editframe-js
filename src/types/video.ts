@@ -59,7 +59,7 @@ export type LayerText = {
 export type AudioLayer = BaseLayer 
 export type ImageLayer = BaseLayer & LayerShape
 export type SubtitlesLayer = BaseLayer & LayerShape & {
-  source: string
+  source?: string
 }
 export type TextLayer = BaseLayer & LayerAlignment & LayerShape & LayerText
 export type VideoLayer = BaseLayer & LayerShape
@@ -68,7 +68,7 @@ export type WaveformLayer = LayerColors & LayerShape & {
   style? : string
 }
 
-export type ComposableLayer = AudioLayer | ImageLayer | TextLayer | VideoLayer | WaveformLayer & {
+export type ComposableLayer = AudioLayer | ImageLayer | SubtitlesLayer | TextLayer | VideoLayer | WaveformLayer & {
   type: string
 }
 

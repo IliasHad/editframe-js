@@ -1,9 +1,9 @@
 import Api from 'api/api'
 import FetchError from 'api/Error'
 import { uuid } from 'shared/utils'
-import { ClipRequestOptions, ClipEncodeConfig } from 'types/clip'
+import { ComposableClipLayer, ClipRequestOptions, ClipEncodeConfig } from 'types/clip'
 import { Size } from 'types/common'
-import { VideoLayer } from 'types/video'
+import { Layer, VideoLayer } from 'types/video'
 const FormData = require('form-data')
 
 type EncodeResponse = {
@@ -19,7 +19,7 @@ class VideoClip {
   protected _layers: Array<VideoLayer> = []
   protected _resolution: Size
   protected _options: ClipRequestOptions
-  protected _source: any
+  protected _source: Blob | string
   protected _trim: { start: Number, end?: Number }
   protected _volume: Number
 
@@ -45,6 +45,20 @@ class VideoClip {
     } 
   }
 
+  get filters () : Array<any> {
+    return this._filters
+  }
+
+  get layers () : Array<VideoLayer> {
+    return this._layers
+  }
+
+  protected addLayer (options: ComposableClipLayer) : Layer {
+    let newLayer : Layer = { id: uuid(), ...options }
+    this._layers.push(newLayer)
+    return newLayer
+  }
+
   /**
    * Set the resolution of the video clip
    *
@@ -62,7 +76,7 @@ class VideoClip {
     this._resolution = { width: parseInt(values[0]), height: parseInt(values[1]) }
     return this
   }
-  resize (value: String) { this.setResolution(value) }
+  resize (value: String) { return this.setResolution(value) }
 
   /**
    * Set the volume of the video clip
@@ -122,6 +136,22 @@ class VideoClip {
     this._filters.push({ name, options: options || {} })
     return this
   } 
+
+  /**
+   * Add auto-transcribed subtitles to your video composition
+   *
+   * @example
+   * 
+   * ```
+   * const clip = videos.fromClip(fs.createReadStream('./files/video.mp4'))
+   * clip.subtitle({ backgroundColor: 'white', color: 'black' })
+   * ```
+   */
+   subtitle (options: ComposableClipLayer) : VideoClip {
+    let _options = Object.assign({}, options)
+    this.addLayer({ type: 'subtitles', ..._options })
+    return this
+  }
 
   /**
   * Send your video clip to the API to be encoded
